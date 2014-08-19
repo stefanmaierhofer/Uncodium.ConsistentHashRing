@@ -6,10 +6,10 @@
         <authors>Stefan Maierhofer</authors>
         <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Consistent hashing.</description>
+        <description>Consistent hashing for C#.</description>
 		<copyright>Copyright © 2014 Stefan Maierhofer.</copyright>
         <language>en-US</language>
-        <tags>consistent hashing hash ring</tags>
+        <tags>consistent hashing algorithms</tags>
     </metadata>
     <files>
         <file src="..\bin\Release\Uncodium.ConsistentHashRing.dll" target="lib\portable-net45+win+wpa81\Uncodium.ConsistentHashRing.dll" />
