@@ -2,11 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Uncodium.ConsistentHashRing</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <authors>Stefan Maierhofer</authors>
         <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Consistent hashing for C#.</description>
+		<releaseNotes>Added doc comments.</releaseNotes>
 		<copyright>Copyright © 2014 Stefan Maierhofer.</copyright>
         <language>en-US</language>
         <tags>consistent hashing algorithms</tags>
