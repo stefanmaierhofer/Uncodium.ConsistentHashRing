@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Uncodium.Base
 {
+    /// <summary>
+    /// Consistent hash ring with generic key and value types.
+    /// </summary>
     public class ConsistentHashRing<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
         private class Item
@@ -23,43 +26,68 @@ namespace Uncodium.Base
         private Func<TKey, TKey, int> _comparer;
         private bool _tiebreaker = true; // used to balance Remove
 
+        /// <summary>
+        /// Creates an empty ring using default comparer for TKey.
+        /// </summary>
         public ConsistentHashRing()
         {
             _comparer = Comparer<TKey>.Default.Compare;
         }
+        /// <summary>
+        /// Creates an empty ring using given comparer for TKey.
+        /// </summary>
         public ConsistentHashRing(IComparer<TKey> comparer)
         {
             _comparer = comparer.Compare;
         }
+        /// <summary>
+        /// Creates an empty ring using given compare function for TKey.
+        /// </summary>
         public ConsistentHashRing(Func<TKey, TKey, int> comparer)
         {
             _comparer = comparer;
         }
 
+        /// <summary>
+        /// Adds node with given key to ring.
+        /// </summary>
         public void Add(TKey nodeKey, TValue node)
         {
             Insert(ref _root, nodeKey, node);
         }
 
+        /// <summary>
+        /// Removes node with given key from ring.
+        /// </summary>
         public void Remove(TKey nodeKey)
         {
             Remove(ref _root, nodeKey);
         }
 
-        public KeyValuePair<TKey, TValue> GetNearest(TKey key)
+        /// <summary>
+        /// Gets entry with key following x (or x if it is a key).
+        /// </summary>
+        public KeyValuePair<TKey, TValue> GetNearest(TKey x)
         {
             if (_root == null) throw new Exception("No nodes specified.");
-            var item = GetNearest(key, _root);
+            var item = GetNearest(x, _root);
             return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
         }
 
-        public KeyValuePair<TKey, TValue> GetNearestBackwards(TKey key)
+        /// <summary>
+        /// Gets entry with key preceding x (or x if it is a key).
+        /// </summary>
+        public KeyValuePair<TKey, TValue> GetNearestBackwards(TKey x)
         {
             if (_root == null) throw new Exception("No nodes specified.");
-            var item = GetNearestBackwards(key, _root);
+            var item = GetNearestBackwards(x, _root);
             return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
         }
 
+        /// <summary>
+        /// Gets entry succeeding given key.
+        /// The key has to exist, if not use GetNearest or GetNearestBackwards.
+        /// </summary>
         public KeyValuePair<TKey, TValue> GetSuccessor(TKey key)
         {
             if (_root == null) throw new Exception("No nodes specified.");
@@ -79,7 +107,11 @@ namespace Uncodium.Base
 
             return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
         }
-        
+
+        /// <summary>
+        /// Gets entry preceding given key.
+        /// The key has to exist, if not use GetNearest or GetNearestBackwards.
+        /// </summary>
         public KeyValuePair<TKey, TValue> GetPredecessor(TKey key)
         {
             if (_root == null) throw new Exception("No nodes specified.");
@@ -100,9 +132,12 @@ namespace Uncodium.Base
             return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
         }
 
-        public IEnumerable<KeyValuePair<TKey, TValue>> EnumerateFromNearest(TKey key)
+        /// <summary>
+        /// Enumerates ring starting at key following x.
+        /// </summary>
+        public IEnumerable<KeyValuePair<TKey, TValue>> EnumerateFromNearest(TKey x)
         {
-            var nearest = GetNearest(key, _root);
+            var nearest = GetNearest(x, _root);
             var enumerator = new EnumeratorIncreasing(_root, nearest, _comparer);
             while (enumerator.MoveNext()) yield return enumerator.Current;
 
@@ -114,6 +149,10 @@ namespace Uncodium.Base
             }
         }
 
+        /// <summary>
+        /// Enumerates ring starting at key following x.
+        /// Skips duplicate values.
+        /// </summary>
         public IEnumerable<KeyValuePair<TKey, TValue>> EnumerateFromNearestDistinct(TKey key)
         {
             var items = new HashSet<TValue>();
@@ -129,6 +168,9 @@ namespace Uncodium.Base
             }
         }
 
+        /// <summary>
+        /// Enumerates ring backwards starting at key preceding x.
+        /// </summary>
         public IEnumerable<KeyValuePair<TKey, TValue>> EnumerateFromNearestBackwards(TKey key)
         {
             var nearest = GetNearestBackwards(key, _root);
@@ -143,6 +185,10 @@ namespace Uncodium.Base
             }
         }
 
+        /// <summary>
+        /// Enumerates ring backwards starting at key preceding x.
+        /// Skips duplicate values.
+        /// </summary>
         public IEnumerable<KeyValuePair<TKey, TValue>> EnumerateFromNearestBackwardsDistinct(TKey key)
         {
             var items = new HashSet<TValue>();
@@ -158,6 +204,9 @@ namespace Uncodium.Base
             }
         }
 
+        /// <summary>
+        /// Gets number of entries in ring.
+        /// </summary>
         public long Count { get { return _count; } }
 
         
@@ -407,6 +456,9 @@ namespace Uncodium.Base
 
         #region ToString
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
         public override string ToString()
         {
             return ToString(_root);
@@ -632,13 +684,19 @@ namespace Uncodium.Base
                 _state = -1;
             }
         }
-
+        
+        /// <summary>
+        /// Supports a simple iteration over a generic collection.
+        /// </summary>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return new EnumeratorIncreasing(_root);
 
         }
-        
+
+        /// <summary>
+        /// Supports a simple iteration over a collection.
+        /// </summary>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

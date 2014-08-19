@@ -14,5 +14,6 @@
     <files>
         <file src="..\bin\Release\Uncodium.ConsistentHashRing.dll" target="lib\portable-net45+win+wpa81\Uncodium.ConsistentHashRing.dll" />
         <file src="..\bin\Release\Uncodium.ConsistentHashRing.pdb" target="lib\portable-net45+win+wpa81\Uncodium.ConsistentHashRing.pdb" />
+        <file src="..\bin\Release\Uncodium.ConsistentHashRing.xml" target="lib\portable-net45+win+wpa81\Uncodium.ConsistentHashRing.xml" />
     </files>
 </package>
